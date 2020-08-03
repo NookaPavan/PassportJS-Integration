@@ -83,35 +83,14 @@ passport.deserializeUser(function(id, done) {
 });
 ```
 
-#### Middleware
-
-To use Passport in an [Express](http://expressjs.com/) or
-[Connect](http://senchalabs.github.com/connect/)-based application, configure it
-with the required `passport.initialize()` middleware.  If your application uses
-persistent login sessions (recommended, but not required), `passport.session()`
-middleware must also be used.
-
-```javascript
-var app = express();
-app.use(require('serve-static')(__dirname + '/../../public'));
-app.use(require('cookie-parser')());
-app.use(require('body-parser').urlencoded({ extended: true }));
-app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
-app.use(passport.initialize());
-app.use(passport.session());
-```
-
 #### Authenticate Requests
 
 Passport provides an `authenticate()` function, which is used as route
 middleware to authenticate requests.
 
 ```javascript
-app.post('/login', 
-  passport.authenticate('local', { failureRedirect: '/login' }),
-  function(req, res) {
-    res.redirect('/');
-  });
+app.post('/login', passport.authenticate('local', { successRedirect: '/',
+                                                    failureRedirect: '/login' }));
 ```
 
 ## Strategies
@@ -160,9 +139,3 @@ that uses [passport-local](https://github.com/jaredhanson/passport-local).
 The [modules](https://github.com/jaredhanson/passport/wiki/Modules) page on the
 [wiki](https://github.com/jaredhanson/passport/wiki) lists other useful modules
 that build upon or integrate with Passport.
-
-## License
-
-[The MIT License](http://opensource.org/licenses/MIT)
-
-Copyright (c) 2011-2019 Jared Hanson <[http://jaredhanson.net/](http://jaredhanson.net/)>
