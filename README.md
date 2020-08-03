@@ -14,19 +14,7 @@ hooks for controlling what occurs when authentication succeeds or fails.
 
 ---
 
-<p align="center">
-  <sup>Advertisement</sup>
-  <br>
-  <a href="https://click.linksynergy.com/link?id=D*o7yui4/NM&offerid=507388.922484&type=2&murl=https%3A%2F%2Fwww.udemy.com%2Fcourse%2Fthe-complete-nodejs-developer-course-2%2F&u1=14vIm40WB4Acg6OIqudjvAOsdlOg7B40l">The Complete Node.js Developer Course</a><br>Learn Node. js by building real-world applications with Node, Express, MongoDB, Jest, and more!
-</p>
-
 ---
-
-Status:
-[![Build](https://travis-ci.org/jaredhanson/passport.svg?branch=master)](https://travis-ci.org/jaredhanson/passport)
-[![Coverage](https://coveralls.io/repos/jaredhanson/passport/badge.svg?branch=master)](https://coveralls.io/r/jaredhanson/passport)
-[![Dependencies](https://david-dm.org/jaredhanson/passport.svg)](https://david-dm.org/jaredhanson/passport)
-
 
 ## Install
 
@@ -48,16 +36,26 @@ application must be configured.
 
 ```javascript
 passport.use(new LocalStrategy(
-  function(username, password, done) {
-    User.findOne({ username: username }, function (err, user) {
-      if (err) { return done(err); }
-      if (!user) { return done(null, false); }
-      if (!user.verifyPassword(password)) { return done(null, false); }
-      return done(null, user);
-    });
-  }
-));
+     async (username, password, done) => {
+      try{
+        const user =  await UserModel.findOne({username : username}).exec();
+         // here is where you make a call to the database
+         // to find the user based on their username or email address
+        if(!user){ //check for users existence 
+          return done(null,user, {message: 'Invalid username or password'});
+        }
+        const passwordOK = await user.comparePassword(password); //compare password
+        if (!passwordOK) {
+            return done(null, false, { message: 'Invalid username or password' }); //not found. Send the error message to callback
+        }
+        return done(null, user); //return user to callback
+      }catch(err){
+          return done(err);
+      }
+    }
+  ));
 ```
+For detailed usage check Main.js file
 
 There are 480+ strategies. Find the ones you want at: [passportjs.org](http://passportjs.org)
 
