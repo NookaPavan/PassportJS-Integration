@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');  //for Password hashing 
 
 const SALT_ROUNDS = 12;
 
@@ -20,7 +20,7 @@ const UserSchema = mongoose.Schema({
   },
 }, { timestamps: true });
 
-UserSchema.pre('save', async function preSave(next) {
+UserSchema.pre('save', async function preSave(next) {  //Before saving function that needs to run
   const user = this;
   if (!user.isModified('password')) return next();
   try {
