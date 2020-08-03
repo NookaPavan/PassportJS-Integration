@@ -20,7 +20,7 @@ const UserSchema = mongoose.Schema({
   },
 }, { timestamps: true });
 
-UserSchema.pre('save', async function preSave(next) {  //Before saving function that needs to run
+UserSchema.pre('save', async function preSave(next) {  //Before saving data ; function that needs to run
   const user = this;
   if (!user.isModified('password')) return next();
   try {

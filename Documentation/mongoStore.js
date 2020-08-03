@@ -38,7 +38,7 @@ app.use(express.session({
     })
 }));
 
-//5. Basic Usage
+//5. Advance Usage
 app.use(session({
     store: new MongoStore({
         url: 'mongodb://localhost/test-app',
